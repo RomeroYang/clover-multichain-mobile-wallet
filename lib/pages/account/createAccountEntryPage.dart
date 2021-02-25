@@ -40,11 +40,15 @@ class CreateAccountEntryPage extends StatelessWidget {
                 ),
                 Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
-                      color: Colors.white,
-                      border: Border.all(width: 1, color: Colors.black.withOpacity(0.2)),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+                        color: Colors.white,
+                        border: Border.all(width: 1, color: Colors.black.withOpacity(0.2)),
+                        backgroundBlendMode: BlendMode.multiply
                     ),
                     child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0))
+                        ),
                         onTap: () {
                           Navigator.pushNamed(context, CreateAccountPage.route);
                         },
