@@ -1,4 +1,7 @@
 const Map<String, String> enAccount = {
+  'welcome': 'Welcome to Clover',
+  'welcome.nowallet': 'I don\'t have a Wallet',
+  'welcome.havewallet': 'I have a Wallet',
   'create': 'Create Account',
   'import': 'Import Account',
   'mnemonic': 'Mnemonic',

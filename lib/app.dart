@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/plugin/index.dart';
@@ -71,21 +72,25 @@ class _WalletAppState extends State<WalletApp> {
   ThemeData _getAppTheme(MaterialColor color) {
     return ThemeData(
       primarySwatch: color,
-      textTheme: TextTheme(
+      textTheme: GoogleFonts.robotoTextTheme(TextTheme(
           headline1: TextStyle(
-            fontSize: 24,
+            fontSize: 26,
+            fontWeight: FontWeight.w500
           ),
           headline2: TextStyle(
             fontSize: 22,
           ),
           headline3: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
+            fontWeight: FontWeight.w500
           ),
-          headline4: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           button: TextStyle(
             color: Colors.white,
             fontSize: 18,
-          )),
+          )).apply(
+        displayColor: Colors.black,
+      ))
     );
   }
 
@@ -159,8 +164,9 @@ class _WalletAppState extends State<WalletApp> {
   }
 
   Future<void> _checkUpdate(BuildContext context) async {
-    final versions = await WalletApi.getLatestVersion();
-    AppUI.checkUpdate(context, versions, autoCheck: true);
+    // Disable auto update check for now
+    // final versions = await WalletApi.getLatestVersion();
+    // AppUI.checkUpdate(context, versions, autoCheck: true);
   }
 
   Future<void> _checkJSCodeUpdate(
@@ -207,7 +213,21 @@ class _WalletAppState extends State<WalletApp> {
       setState(() {
         _store = store;
         _service = service;
-        _theme = _getAppTheme(service.plugin.basic.primaryColor);
+
+        const Map<int, Color> color =
+        {
+          50: Color.fromRGBO(39, 165, 119, .1),
+          100: Color.fromRGBO(39, 165, 119, .2),
+          200: Color.fromRGBO(39, 165, 119, .3),
+          300: Color.fromRGBO(39, 165, 119, .4),
+          400: Color.fromRGBO(39, 165, 119, .5),
+          500: Color.fromRGBO(39, 165, 119, .6),
+          600: Color.fromRGBO(39, 165, 119, .7),
+          700: Color.fromRGBO(39, 165, 119, .8),
+          800: Color.fromRGBO(39, 165, 119, .9),
+          900: Color.fromRGBO(39, 165, 119, 1),
+        };
+        _theme = _getAppTheme(const MaterialColor(0xFF27A577, color));
       });
 
       if (store.settings.localeCode.isNotEmpty) {
