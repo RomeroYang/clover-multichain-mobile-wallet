@@ -72,49 +72,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
 
   Future<void> _onNext() async {
-    final next = await showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final dic = I18n.of(context).getDic(i18n_full_dic_app, 'account');
-        final dicCommon = I18n.of(context).getDic(i18n_full_dic_ui, 'common');
-        return CupertinoAlertDialog(
-          title: Container(),
-          content: Column(
-            children: <Widget>[
-              Image.asset('assets/images/screenshot.png'),
-              Container(
-                padding: EdgeInsets.only(top: 16, bottom: 24),
-                child: Text(
-                  dic['create.warn9'],
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ),
-              Text(dic['create.warn10']),
-            ],
-          ),
-          actions: <Widget>[
-            CupertinoButton(
-              child: Text(dicCommon['cancel']),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            CupertinoButton(
-              child: Text(dicCommon['ok']),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        );
-      },
-    );
-    if (next) {
       final advancedOptions =
           await Navigator.pushNamed(context, BackupAccountPage.route);
       if (advancedOptions != null) {
         setState(() {
-          _step = 1;
-          _advanceOptions = (advancedOptions as AccountAdvanceOptionParams);
+          _importAccount();
+          // _step = 1;
+          // _advanceOptions = (advancedOptions as AccountAdvanceOptionParams);
         });
       }
-    }
   }
 
   Widget _generateSeed(BuildContext context) {
@@ -173,28 +139,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_step == 0) {
-      return _generateSeed(context);
-    }
+    // if (_step == 0) {
+    //   return _generateSeed(context);
+    // }
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            I18n.of(context).getDic(i18n_full_dic_app, 'account')['create']),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            setState(() {
-              _step = 0;
-            });
-          },
-        ),
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: CreateAccountForm(
           widget.service,
           submitting: _submitting,
-          onSubmit: _importAccount,
+          onSubmit: _onNext,
         ),
       ),
     );

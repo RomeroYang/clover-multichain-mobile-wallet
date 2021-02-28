@@ -84,8 +84,10 @@ class _WalletAppState extends State<WalletApp> {
             fontSize: 16,
             fontWeight: FontWeight.w500
           ),
-          headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          button: TextStyle(
+          headline4: TextStyle(fontSize: 16),
+        headline6: TextStyle(fontSize: 12, color: Colors.black),
+        subtitle1: TextStyle(fontSize: 16, color: Color.fromRGBO(0, 0, 0, 0.45), height: 1.6),
+        button: TextStyle(
             color: Colors.white,
             fontSize: 18,
           )).apply(

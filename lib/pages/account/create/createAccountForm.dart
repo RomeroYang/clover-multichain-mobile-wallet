@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:polkawallet_sdk/utils/i18n.dart';
 import 'package:polkawallet_ui/components/roundedButton.dart';
 import 'package:polkawallet_ui/utils/i18n.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CreateAccountForm extends StatefulWidget {
   CreateAccountForm(this.service, {this.submitting, this.onSubmit});
 
   final AppService service;
-  final Future<bool> Function() onSubmit;
+  final Future<void> Function() onSubmit;
   final bool submitting;
 
   @override
@@ -22,7 +23,6 @@ class CreateAccountForm extends StatefulWidget {
 class _CreateAccountFormState extends State<CreateAccountForm> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameCtrl = new TextEditingController();
   final TextEditingController _passCtrl = new TextEditingController();
   final TextEditingController _pass2Ctrl = new TextEditingController();
 
@@ -56,22 +56,22 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
   }
 
   Future<void> _onSubmit() async {
-    if (_formKey.currentState.validate()) {
-      widget.service.store.account
-          .setNewAccount(_nameCtrl.text, _passCtrl.text);
-      final success = await widget.onSubmit();
-
-      if (success) {
-        /// save password with biometrics after import success
-        if (_supportBiometric && _enableBiometric) {
-          await _authBiometric();
-        }
-
-        widget.service.plugin.changeAccount(widget.service.keyring.current);
-        widget.service.store.account.resetNewAccount();
-        Navigator.popUntil(context, ModalRoute.withName('/'));
-      }
-    }
+    // if (_formKey.currentState.validate()) {
+    //   widget.service.store.account
+    //       .setNewAccount(_nameCtrl.text, _passCtrl.text);
+    //   final success = await widget.onSubmit();
+    //
+    //   if (success) {
+    //     /// save password with biometrics after import success
+    //     if (_supportBiometric && _enableBiometric) {
+    //       await _authBiometric();
+    //     }
+    //
+    //     widget.service.plugin.changeAccount(widget.service.keyring.current);
+    //     widget.service.store.account.resetNewAccount();
+    //     Navigator.popUntil(context, ModalRoute.withName('/'));
+    //   }
+    // }
   }
 
   @override
@@ -80,96 +80,139 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
     _checkBiometricAuth();
   }
 
+  bool _isObscure = true;
+  bool _isObscure2 = true;
+
   @override
   Widget build(BuildContext context) {
     final dic = I18n.of(context).getDic(i18n_full_dic_app, 'account');
 
     return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.person),
-                    hintText: dic['create.name'],
-                    labelText: dic['create.name'],
-                  ),
-                  controller: _nameCtrl,
-                  validator: (v) {
-                    return v.trim().length > 0
-                        ? null
-                        : dic['create.name.error'];
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.fromLTRB(22, 18, 22, 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
                   },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.lock),
-                    hintText: dic['create.password'],
-                    labelText: dic['create.password'],
-                  ),
-                  controller: _passCtrl,
-                  validator: (v) {
-                    return AppFmt.checkPassword(v.trim())
-                        ? null
-                        : dic['create.password.error'];
-                  },
-                  obscureText: true,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.lock),
-                    hintText: dic['create.password2'],
-                    labelText: dic['create.password2'],
-                  ),
-                  controller: _pass2Ctrl,
-                  obscureText: true,
-                  validator: (v) {
-                    return _passCtrl.text != v
-                        ? dic['create.password2.error']
-                        : null;
-                  },
-                ),
-                _supportBiometric
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 24),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: Checkbox(
-                                value: _enableBiometric,
-                                onChanged: (v) {
-                                  setState(() {
-                                    _enableBiometric = v;
-                                  });
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 16),
-                              child: Text(dic['unlock.bio.enable']),
-                            )
-                          ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                            'assets/images/back.svg'
                         ),
-                      )
-                    : Container(),
-              ],
-            ),
+                        SizedBox(width: 8),
+                        Text(dic['back'], style: Theme.of(context).textTheme.headline4)
+                      ],
+                    ),
+                  )
+              ),
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(height: 40),
+                    Text(dic['create'], style: Theme.of(context).textTheme.headline1),
+                    SizedBox(height: 12),
+                    Text(dic['create.desc'], style: Theme.of(context).textTheme.subtitle1),
+                    SizedBox(height: 60),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: SvgPicture.asset(
+                            _isObscure ? 'assets/images/show.svg' : 'assets/images/hide.svg',
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
+                        hintText: dic['create.password'],
+                        labelText: dic['create.password'],
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                      controller: _passCtrl,
+                      validator: (v) {
+                        return AppFmt.checkPassword(v.trim())
+                            ? null
+                            : dic['create.password.error'];
+                      },
+                      obscureText: _isObscure,
+                    ),
+                    SizedBox(height: 70),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: SvgPicture.asset(
+                            _isObscure2 ? 'assets/images/show.svg' : 'assets/images/hide.svg',
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure2 = !_isObscure2;
+                            });
+                          },
+                        ),
+                        hintText: dic['create.password2'],
+                        labelText: dic['create.password2'],
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      style: TextStyle(color: Colors.black),
+                      controller: _pass2Ctrl,
+                      obscureText: _isObscure2,
+                      validator: (v) {
+                        return _passCtrl.text != v
+                            ? dic['create.password2.error']
+                            : null;
+                      },
+                    ),
+                    _supportBiometric
+                        ? Padding(
+                      padding: EdgeInsets.only(top: 24),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Checkbox(
+                              value: _enableBiometric,
+                              onChanged: (v) {
+                                setState(() {
+                                  _enableBiometric = v;
+                                });
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Text(dic['unlock.bio.enable']),
+                          )
+                        ],
+                      ),
+                    )
+                        : Container(),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(16),
+                child: RoundedButton(
+                  text: I18n.of(context).getDic(i18n_full_dic_ui, 'common')['next'],
+                  onPressed: widget.submitting ? null : () => _onSubmit(),
+                ),
+              ),
+            ],
           ),
-          Container(
-            padding: EdgeInsets.all(16),
-            child: RoundedButton(
-              text: I18n.of(context).getDic(i18n_full_dic_ui, 'common')['next'],
-              onPressed: widget.submitting ? null : () => _onSubmit(),
-            ),
-          ),
-        ],
-      ),
+        )
     );
   }
 }

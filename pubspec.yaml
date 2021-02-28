@@ -84,6 +84,11 @@ flutter:
     - assets/images/logo.svg
     - assets/images/create.svg
     - assets/images/import.svg
+    - assets/images/back.svg
+    - assets/images/fingerprint.svg
+    - assets/images/hide.svg
+    - assets/images/seed_blanket.png
+    - assets/images/show.svg
     - assets/images/wallet.svg
     - assets/images/user.svg
     - assets/images/scan.svg
