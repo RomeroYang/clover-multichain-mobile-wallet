@@ -23,64 +23,44 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
-  AccountAdvanceOptionParams _advanceOptions = AccountAdvanceOptionParams();
 
   int _step = 0;
   bool _submitting = false;
-
-  Future<bool> _importAccount() async {
-    setState(() {
-      _submitting = true;
-    });
-    showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(
-              I18n.of(context).getDic(i18n_full_dic_ui, 'common')['loading']),
-          content: Container(height: 64, child: CupertinoActivityIndicator()),
-        );
-      },
-    );
-
-    try {
-      final json = await widget.service.account.importAccount(
-        cryptoType: _advanceOptions.type ?? CryptoType.sr25519,
-        derivePath: _advanceOptions.path ?? '',
-      );
-      final acc = await widget.service.account.addAccount(
-        json: json,
-        cryptoType: _advanceOptions.type ?? CryptoType.sr25519,
-        derivePath: _advanceOptions.path ?? '',
-      );
-
-      setState(() {
-        _submitting = false;
-      });
-      Navigator.of(context).pop();
-      return true;
-    } catch (err) {
-      Navigator.of(context).pop();
-      AppUI.alertWASM(context, () {
-        setState(() {
-          _submitting = false;
-          _step = 0;
-        });
-      });
-      return false;
-    }
-  }
 
   Future<void> _onNext() async {
       final advancedOptions =
           await Navigator.pushNamed(context, BackupAccountPage.route);
       if (advancedOptions != null) {
         setState(() {
-          _importAccount();
-          // _step = 1;
-          // _advanceOptions = (advancedOptions as AccountAdvanceOptionParams);
+          _step = 1;
         });
       }
+  }
+
+  Future<void> _authBiometric() async {
+    final pubKey = widget.service.keyring.current.pubKey;
+    final storeFile = await widget.service.account.getBiometricPassStoreFile(
+      context,
+      pubKey,
+    );
+
+    try {
+      await storeFile.write(widget.service.store.account.newAccount.password);
+      widget.service.account.setBiometricEnabled(pubKey);
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  Future<void> _onFinish() async {
+    /// save password with biometrics after import success
+    // if (_supportBiometric && _enableBiometric) {
+    // await _authBiometric();
+    // }
+
+    widget.service.plugin.changeAccount(widget.service.keyring.current);
+    widget.service.store.account.resetNewAccount();
+    Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
   Widget _generateSeed(BuildContext context) {
@@ -128,7 +108,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               child: RoundedButton(
                 text:
                     I18n.of(context).getDic(i18n_full_dic_ui, 'common')['next'],
-                onPressed: () => _onNext(),
+                onPressed: () => _onFinish(),
               ),
             ),
           ],
@@ -139,17 +119,17 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (_step == 0) {
-    //   return _generateSeed(context);
-    // }
-    return Scaffold(
-      body: SafeArea(
-        child: CreateAccountForm(
-          widget.service,
-          submitting: _submitting,
-          onSubmit: _onNext,
+    if (_step == 0) {
+      return Scaffold(
+        body: SafeArea(
+          child: CreateAccountForm(
+            widget.service,
+            // submitting: _submitting,
+            onSubmit: _onNext,
+          ),
         ),
-      ),
-    );
+      );
+    }
+    return _generateSeed(context);
   }
 }

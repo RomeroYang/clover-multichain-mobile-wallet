@@ -10,11 +10,11 @@ import 'package:polkawallet_ui/utils/i18n.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CreateAccountForm extends StatefulWidget {
-  CreateAccountForm(this.service, {this.submitting, this.onSubmit});
+  CreateAccountForm(this.service, {/*this.submitting,*/ this.onSubmit});
 
   final AppService service;
   final Future<void> Function() onSubmit;
-  final bool submitting;
+  // final bool submitting;
 
   @override
   _CreateAccountFormState createState() => _CreateAccountFormState();
@@ -40,38 +40,12 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
     });
   }
 
-  Future<void> _authBiometric() async {
-    final pubKey = widget.service.keyring.current.pubKey;
-    final storeFile = await widget.service.account.getBiometricPassStoreFile(
-      context,
-      pubKey,
-    );
-
-    try {
-      await storeFile.write(widget.service.store.account.newAccount.password);
-      widget.service.account.setBiometricEnabled(pubKey);
-    } catch (err) {
-      // ignore
-    }
-  }
-
   Future<void> _onSubmit() async {
-    // if (_formKey.currentState.validate()) {
-    //   widget.service.store.account
-    //       .setNewAccount(_nameCtrl.text, _passCtrl.text);
-    //   final success = await widget.onSubmit();
-    //
-    //   if (success) {
-    //     /// save password with biometrics after import success
-    //     if (_supportBiometric && _enableBiometric) {
-    //       await _authBiometric();
-    //     }
-    //
-    //     widget.service.plugin.changeAccount(widget.service.keyring.current);
-    //     widget.service.store.account.resetNewAccount();
-    //     Navigator.popUntil(context, ModalRoute.withName('/'));
-    //   }
-    // }
+    if (_formKey.currentState.validate()) {
+      widget.service.store.account
+          .setNewAccount("", _passCtrl.text);
+      widget.onSubmit();
+    }
   }
 
   @override
@@ -207,7 +181,8 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
                 padding: EdgeInsets.all(16),
                 child: RoundedButton(
                   text: I18n.of(context).getDic(i18n_full_dic_ui, 'common')['next'],
-                  onPressed: widget.submitting ? null : () => _onSubmit(),
+                  // onPressed: widget.submitting ? null : () => _onSubmit(),
+                  onPressed: () => _onSubmit(),
                 ),
               ),
             ],

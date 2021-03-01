@@ -209,7 +209,7 @@ class _ImportAccountPageState extends State<ImportAccountPage> {
         body: SafeArea(
           child: CreateAccountForm(
             widget.service,
-            submitting: _submitting,
+            // submitting: _submitting,
             onSubmit: _importAccount,
           ),
         ),

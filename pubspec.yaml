@@ -88,6 +88,7 @@ flutter:
     - assets/images/fingerprint.svg
     - assets/images/hide.svg
     - assets/images/seed_blanket.png
+    - assets/images/unlock.svg
     - assets/images/show.svg
     - assets/images/wallet.svg
     - assets/images/user.svg
@@ -97,6 +98,12 @@ flutter:
     - assets/images/assets_down.png
     - assets/images/assets_send.png
 
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: google_fonts/RobotoMono-Regular.ttf
+        - asset: google_fonts/RobotoMono-Bold.ttf
+          weight: 700
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

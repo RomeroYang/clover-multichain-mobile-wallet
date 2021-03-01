@@ -15,8 +15,8 @@ const Map<String, String> enAccount = {
   'create.password2.error': 'Inconsistent passwords',
   'create.warn1': 'Backup prom',
   'create.warn2': 'Getting a mnemonic equals ownership of a wallet asset',
-  'create.warn3': 'Backup mnemonic',
-  'create.warn4': 'Use paper and pen to correctly copy mnemonics',
+  'create.warn3': 'Write down your\nseed phrase',
+  'create.warn4': 'This seed phrase is used to generate your first account. Save this somewhere safe and don\'t share it',
   'create.warn5':
       'If your phone is lost, stolen or damaged, the mnemonic will restore your assets',
   'create.warn6': 'Offline storage',
@@ -26,9 +26,9 @@ const Map<String, String> enAccount = {
   'create.warn9': 'Do not take screenshots',
   'create.warn10':
       'Do not take screenshots, which may be collected by third-party malware, resulting in asset loss',
-  'backup': 'Confirm the mnemonic',
+  'backup': 'Confirm the seed phrase',
   'backup.confirm':
-      'Please click on the mnemonic in the correct order to confirm that the backup is correct',
+      'Please confirm the seed phrase by entering all words in the correct order',
   'backup.reset': 'Reset',
   'backup.error': 'This device does not support key type sr25519.',
   'backup.error.2':
