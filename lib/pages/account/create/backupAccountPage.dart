@@ -10,6 +10,13 @@ import 'package:polkawallet_ui/utils/i18n.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:app/utils/UI.dart';
+import 'dart:collection';
+
+extension IterableMapIndex<T> on Iterable<T> {
+  Iterable<E> mapIndexed<E>(E f(int index, T t)) {
+    return Iterable.generate(this.length, (index)=>f(index, elementAt(index)));
+  }
+}
 
 class BackupAccountPage extends StatefulWidget {
   const BackupAccountPage(this.service);
@@ -27,6 +34,7 @@ class _BackupAccountPageState extends State<BackupAccountPage> {
   bool showPhrase = false;
 
   List<String> _wordsSelected;
+  HashMap<int, bool> _selectedIndices = new HashMap();
   List<String> _wordsLeft;
 
   @override
@@ -171,6 +179,7 @@ class _BackupAccountPageState extends State<BackupAccountPage> {
                     setState(() {
                       _step = 1;
                       _wordsSelected = <String>[];
+                      _selectedIndices.clear();
                       _wordsLeft = widget.service.store.account.newAccount.key
                           .split(' ');
                     });
@@ -246,6 +255,7 @@ class _BackupAccountPageState extends State<BackupAccountPage> {
                                     .service.store.account.newAccount.key
                                     .split(' ');
                                 _wordsSelected = [];
+                                _selectedIndices.clear();
                               });
                             },
                           )
@@ -305,12 +315,12 @@ class _BackupAccountPageState extends State<BackupAccountPage> {
               _wordsLeft.length > (r + 1) * 3
                   ? (r + 1) * 3
                   : _wordsLeft.length)
-              .map(
-                (i) => Container(
+              .mapIndexed(
+                (idx, text) => Container(
               padding: EdgeInsets.only(left: 4, right: 4),
-              child: _wordsSelected.indexOf(i) >= 0 ? OutlinedButton(
+              child: _selectedIndices[r * 3 + idx] != null ? OutlinedButton(
                 child: Text(
-                  i,
+                  text,
                 ),
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
@@ -326,12 +336,13 @@ class _BackupAccountPageState extends State<BackupAccountPage> {
               ) :
               OutlinedButton(
                 child: Text(
-                  i,
+                  text,
                 ),
                 onPressed: () {
                   setState(() {
                     // _wordsLeft.remove(i);
-                    _wordsSelected.add(i);
+                    _wordsSelected.add(text);
+                    _selectedIndices[r * 3 + idx] = true;
                   });
                 },
                 style: OutlinedButton.styleFrom(

@@ -11,6 +11,7 @@ import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:polkawallet_sdk/utils/i18n.dart';
 import 'package:polkawallet_ui/components/roundedButton.dart';
 import 'package:polkawallet_ui/utils/i18n.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CreateAccountPage extends StatefulWidget {
   CreateAccountPage(this.service);
@@ -68,46 +69,30 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     final dic = I18n.of(context).getDic(i18n_full_dic_app, 'account');
 
     return Scaffold(
-      appBar: AppBar(title: Text(dic['create']), centerTitle: true),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(16),
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(bottom: 16),
-                    child: Text(dic['create.warn1'], style: theme.headline4),
-                  ),
-                  Text(dic['create.warn2']),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 16, top: 32),
-                    child: Text(dic['create.warn3'], style: theme.headline4),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 8),
-                    child: Text(dic['create.warn4']),
-                  ),
-                  Text(dic['create.warn5']),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 16, top: 32),
-                    child: Text(dic['create.warn6'], style: theme.headline4),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 8),
-                    child: Text(dic['create.warn7']),
-                  ),
-                  Text(dic['create.warn8']),
-                ],
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                        'assets/images/logo.svg'
+                    ),
+                    SizedBox(height: 32),
+                    Text(dic['create.warn1'], style: theme.headline1),
+                    SizedBox(height: 10),
+                    Text(dic['create.warn2'], style: theme.subtitle1, textAlign: TextAlign.center)
+                  ],
               ),
-            ),
+            )),
             Container(
               padding: EdgeInsets.all(16),
               child: RoundedButton(
-                text:
-                    I18n.of(context).getDic(i18n_full_dic_ui, 'common')['next'],
+                text: dic['done'],
                 onPressed: () => _onFinish(),
               ),
             ),
@@ -124,7 +109,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         body: SafeArea(
           child: CreateAccountForm(
             widget.service,
-            // submitting: _submitting,
             onSubmit: _onNext,
           ),
         ),

@@ -13,8 +13,8 @@ const Map<String, String> enAccount = {
   'create.password.error': '6 to 18 digits and contains numbers and letters',
   'create.password2': 'Confirm Password',
   'create.password2.error': 'Inconsistent passwords',
-  'create.warn1': 'Backup prom',
-  'create.warn2': 'Getting a mnemonic equals ownership of a wallet asset',
+  'create.warn1': 'Congratulations',
+  'create.warn2': 'Keep your original phrase safe, it\'s your responsibility',
   'create.warn3': 'Write down your\nseed phrase',
   'create.warn4': 'This seed phrase is used to generate your first account. Save this somewhere safe and don\'t share it',
   'create.warn5':
@@ -64,6 +64,8 @@ const Map<String, String> enAccount = {
       'Safety Warning!!! DO NOT send this QR to anyone or you may LOSE your assets!!!',
   'uos.pass.warn':
       'Safety Warning!!! You are using offline signature to send transaction!!! Please make sure you fully understand the security risks of this operation!!!',
+  'continue': 'Continue',
+  'done': 'Done'
 };
 
 const Map<String, String> zhAccount = {
